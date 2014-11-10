@@ -7,7 +7,13 @@
 #include "Vertex.h"
 #include "Face.h"
 #include "HMesh.h"
+#include <iostream>
 
+using namespace std;
+
+Halfedge::Halfedge(HMesh* hMesh) : hMesh{hMesh} {
+
+}
 
 Halfedge::~Halfedge() {
     if (hMesh){
@@ -126,7 +132,7 @@ void Halfedge::flip() {
 
 Vertex* Halfedge::split(){
     Vertex* vertex = hMesh->createVertex();
-    vertex->position = (vert->position+prev->vert->position)*0.5f;
+    vertex->position = (vert->position + prev->vert->position)*0.5f;
     Halfedge* newHE = splitInternal(vertex);
     if (opp != nullptr){
         Halfedge* newOppHE = opp->splitInternal(vertex);
@@ -152,9 +158,7 @@ void Halfedge::link(Face* face){
 }
 
 void Halfedge::link(Vertex* vertex){
-    if (next == nullptr){
-        assert(false);//("next pointer is null");
-    }
+    assert(next != nullptr);
     vertex->halfedge = next;
     vert = vertex;
 }

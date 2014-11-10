@@ -7,6 +7,7 @@
 #include <assert.h>
 #include <boost/container/stable_vector.hpp>
 #include "Vertex.h"
+#include <iostream>
 
 #pragma once
 
@@ -16,7 +17,7 @@ class HMesh;
 
 class Halfedge {
 public:
-    Halfedge(HMesh* hMesh):hMesh{hMesh}{}
+    Halfedge(HMesh* hMesh);
     Halfedge(const Halfedge&) = delete;
     ~Halfedge();
 
@@ -51,5 +52,13 @@ private:
     friend class HMesh;
 };
 
+
+
+inline std::ostream& operator<<(std::ostream& os, Halfedge *dt)
+{
+    os << "Halfedge{ id: "<< (void*)dt<<",next:"<< (void*)dt->next<<",prev:"<< (void*)dt->prev
+            <<",opp:"<< (void*)dt->opp<<",vert:"<< (void*)dt->vert<<",face:"<< (void*)dt->face<<"}";
+    return os;
+}
 
 

@@ -6,7 +6,9 @@
 #pragma once
 
 #include <vector>
+#include <iostream>
 #include <glm/glm.hpp>
+#include <glm/gtx/string_cast.hpp>
 
 
 class Halfedge;
@@ -40,5 +42,10 @@ private:
     friend class HMesh;
 };
 
+inline std::ostream& operator<<(std::ostream& os, Vertex *dt)
+{
+    os << "Vertex{ id: "<< (void*)dt << ",halfedge:" << (void*)dt->halfedge << ",position:" << glm::to_string(dt->position) << "}";
+    return os;
+}
 
 

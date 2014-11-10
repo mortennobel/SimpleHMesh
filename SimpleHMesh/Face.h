@@ -7,6 +7,7 @@
 #pragma once
 
 #include <vector>
+#include <iostream>
 
 class Halfedge;
 class Vertex;
@@ -14,7 +15,7 @@ class HMesh;
 
 class Face {
 public:
-    Face(HMesh* hMesh):hMesh{hMesh}{}
+    Face(HMesh* hMesh);
     Face(const Face&) = delete;
     ~Face();
     int edgeCount();
@@ -33,6 +34,12 @@ private:
     friend class HMesh;
     friend class HMesh;
 };
+
+inline std::ostream& operator<<(std::ostream& os, Face *dt)
+{
+    os << "Face{ id: "<< (void*)dt<<",he:"<< (void*)dt->halfedge<<"}";
+    return os;
+}
 
 
 

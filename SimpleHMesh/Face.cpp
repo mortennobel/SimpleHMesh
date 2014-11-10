@@ -11,6 +11,10 @@
 
 using namespace std;
 
+Face::Face(HMesh* hMesh) : hMesh{hMesh} {
+
+}
+
 Face::~Face() {
     if (hMesh){
         hMesh = nullptr;
@@ -48,13 +52,15 @@ void Face::reassignFaceToEdgeLoop() {
 Vertex *Face::split() {
     Vertex* v = hMesh->createVertex();
     vector<Halfedge*> newHalfedges;
+    vector<Vertex*> vertices;
     for (auto he : circulate()){
         v->position += he->vert->position;
-
         Halfedge* toNewVertex = hMesh->createHalfedge();
         Halfedge* fromNewVertex = hMesh->createHalfedge();
         toNewVertex->glue(fromNewVertex);
         newHalfedges.push_back(toNewVertex);
+
+        vertices.push_back(he->vert);
     }
     int count = 0;
     bool first = true;
@@ -62,22 +68,25 @@ Vertex *Face::split() {
     // second iteration - link everything together
     for (auto he : circulate()){
         int prevIdx = (count-1+newHalfedges.size())%newHalfedges.size();
-        Halfedge *prevNewEdge = newHalfedges[prevIdx];
+        Halfedge *prevNewEdge = newHalfedges[prevIdx]->opp;
         Halfedge *newEdge = newHalfedges[count];
 
         // link halfedges
-        newEdge->opp->link(he->next);
+        prevNewEdge->link(he);
         he->link(newEdge);
         newEdge->link(prevNewEdge);
 
         // link vertices
-        newEdge->opp->link(he->vert);
         newEdge->link(v);
+        prevNewEdge->link(vertices[prevIdx]);
 
-        if (!first){
+        if (!first) {
             Face* newFace = hMesh->createFace();
             newFace->halfedge = he;
             newFace->reassignFaceToEdgeLoop();
+        } else {
+            halfedge = he;
+            reassignFaceToEdgeLoop();
         }
 
         Halfedge *toNewVertex = hMesh->createHalfedge();
@@ -87,6 +96,7 @@ Vertex *Face::split() {
         first = false;
         count++;
     }
+
     v->position = v->position * (1.0f/count);
 
     return v;
@@ -106,4 +116,3 @@ bool Face::isValid() {
     }
     return valid;
 }
-

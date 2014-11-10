@@ -19,7 +19,7 @@ int main(int argc, char * argv[])
     auto camera = scene->createPerspectiveCamera();
     camera->gameObject()->transform()->setLocalPosition({0,0,10});
     CameraController* cameraController = camera->gameObject()->addComponent<CameraController>();
-    MeshRenderer *mr = scene->createCube();
+    MeshRenderer *mr = scene->createPlane();
     cameraController->setTarget(mr->transform());
     mr->setMaterial( new Material(Project::loadShader("shaders/line.shader")));
     mr->gameObject()->addComponent<HMeshComponent>();

@@ -26,6 +26,8 @@ public:
 
     void build(std::vector<glm::vec3> vertices, std::vector<int> indices);
     void exportMesh(std::vector<glm::vec3> outVertices, std::vector<int> outIndices);
+
+    void printDebug();
 private:
     boost::container::stable_vector<Vertex> vertex;
     boost::container::stable_vector<Halfedge> halfedge;

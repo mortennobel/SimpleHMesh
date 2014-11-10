@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <tuple>
+#include <iostream>
 #include <unordered_map>
 #include "Vertex.h"
 #include "Halfedge.h"
@@ -145,4 +146,19 @@ const std::vector<Face*> HMesh::faces() {
         res.push_back(&f);
     }
     return res;
+}
+
+void HMesh::printDebug() {
+    cout << "Faces:" << endl;
+    for (auto & f : face){
+        cout << " "<<&f<< endl;
+    }
+    cout << "HE:" << endl;
+    for (auto & he : halfedge){
+        cout << " "<<&he<< endl;
+    }
+    cout << "Vertices:" << endl;
+    for (auto & v : vertex){
+        cout << " "<<&v<< endl;
+    }
 }

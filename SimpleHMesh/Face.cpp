@@ -12,6 +12,10 @@
 using namespace std;
 
 Face::Face(HMesh* hMesh) : hMesh{hMesh} {
+#ifdef DEBUG
+    static int idGlobal = 0;
+    id = idGlobal++;
+#endif
 
 }
 
@@ -156,4 +160,13 @@ Face* Face::connect(Vertex *pVertex1, Vertex *pVertex2) {
     reassignFaceToEdgeLoop();
 
     return newFace;
+}
+
+std::ostream &operator<<(std::ostream& os, Face *dt) {
+#ifdef DEBUG
+    os << "Face{ id: "<< dt->id<<",he:"<< (dt->halfedge?dt->halfedge->id:-1) <<"}";
+#else
+    os << "Face{ id: "<< (void*)dt<<",he:"<< (void*)dt->halfedge<<"}";
+#endif
+    return os;
 }

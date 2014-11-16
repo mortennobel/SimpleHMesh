@@ -42,6 +42,9 @@ public:
 
     bool isValid();
     float length();
+#ifdef DEBUG
+    int id;
+#endif
 private:
 
 
@@ -54,12 +57,6 @@ private:
 };
 
 
-
-inline std::ostream& operator<<(std::ostream& os, Halfedge *dt)
-{
-    os << "Halfedge{ id: "<< (void*)dt<<",next:"<< (void*)dt->next<<",prev:"<< (void*)dt->prev
-            <<",opp:"<< (void*)dt->opp<<",vert:"<< (void*)dt->vert<<",face:"<< (void*)dt->face<<"}";
-    return os;
-}
+std::ostream & operator<<(std::ostream& os, Halfedge *dt);
 
 

@@ -10,6 +10,13 @@
 
 using namespace std;
 
+Vertex::Vertex(HMesh* hMesh) : hMesh{hMesh} {
+#ifdef DEBUG
+    static int idGlobal = 0;
+    id = idGlobal++;
+#endif
+}
+
 Vertex::~Vertex() {
     if (hMesh){
         hMesh = nullptr;
@@ -125,3 +132,11 @@ bool Vertex::isBoundary() {
     return iter == nullptr;
 }
 
+std::ostream &operator<<(std::ostream& os, Vertex *dt) {
+#ifdef DEBUG
+    os << "Vertex{ id: "<< dt->id << ",halfedge:" << (dt->halfedge?dt->halfedge->id:-1) << ",position:" << glm::to_string(dt->position) << "}";
+#else
+    os << "Vertex{ id: "<< (void*)dt << ",halfedge:" << (void*)dt->halfedge << ",position:" << glm::to_string(dt->position) << "}";
+#endif
+    return os;
+}

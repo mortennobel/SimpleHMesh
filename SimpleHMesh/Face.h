@@ -31,19 +31,18 @@ public:
     Halfedge* halfedge = nullptr;
 
     Face* connect(Vertex *pVertex, Vertex *pVertex1);
-
+#ifdef DEBUG
+    int id;
+#endif
 private:
     HMesh* hMesh;
 
     friend class HMesh;
     friend class HMesh;
+
 };
 
-inline std::ostream& operator<<(std::ostream& os, Face *dt)
-{
-    os << "Face{ id: "<< (void*)dt<<",he:"<< (void*)dt->halfedge<<"}";
-    return os;
-}
+std::ostream & operator<<(std::ostream& os, Face *dt);
 
 
 

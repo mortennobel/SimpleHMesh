@@ -16,7 +16,7 @@ class HMesh;
 
 class Vertex {
 public:
-    Vertex(HMesh* hMesh):hMesh{hMesh}{}
+    Vertex(HMesh* hMesh);
     Vertex(const Vertex&) = delete;
     ~Vertex();
 
@@ -34,6 +34,9 @@ public:
     std::vector<Halfedge*> circulateOneRing();
 
     bool isValid();
+#ifdef DEBUG
+    int id;
+#endif
 private:
 
 
@@ -42,10 +45,6 @@ private:
     friend class HMesh;
 };
 
-inline std::ostream& operator<<(std::ostream& os, Vertex *dt)
-{
-    os << "Vertex{ id: "<< (void*)dt << ",halfedge:" << (void*)dt->halfedge << ",position:" << glm::to_string(dt->position) << "}";
-    return os;
-}
+std::ostream & operator<<(std::ostream& os, Vertex *dt);
 
 

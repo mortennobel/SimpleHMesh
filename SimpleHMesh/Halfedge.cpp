@@ -12,7 +12,10 @@
 using namespace std;
 
 Halfedge::Halfedge(HMesh* hMesh) : hMesh{hMesh} {
-
+#ifdef DEBUG
+    static int idGlobal = 0;
+    id = idGlobal++;
+#endif
 }
 
 Halfedge::~Halfedge() {
@@ -169,4 +172,15 @@ float Halfedge::length() {
     glm::vec3 vertexPos = vert->position;
     glm::vec3 lastVertexPos = prev->vert->position;
     return glm::length(vertexPos - lastVertexPos);
+}
+
+std::ostream &operator<<(std::ostream& os, Halfedge *dt) {
+#ifdef DEBUG
+    os << "Halfedge{ id: "<< dt->id<<",next:"<< (dt->next?dt->next->id:-1)<<",prev:"<< (dt->prev?dt->prev->id:-1)
+            <<",opp:"<< (dt->opp?dt->opp->id:-1)<<",vert:"<< (dt->vert?dt->vert->id:-1)<<",face:"<< (dt->face?dt->face->id:-1)<<"}";
+#else
+    os << "Halfedge{ id: "<< (void*)dt<<",next:"<< (void*)dt->next<<",prev:"<< (void*)dt->prev
+            <<",opp:"<< (void*)dt->opp<<",vert:"<< (void*)dt->vert<<",face:"<< (void*)dt->face<<"}";
+#endif
+    return os;
 }

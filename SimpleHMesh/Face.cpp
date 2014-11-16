@@ -116,3 +116,44 @@ bool Face::isValid() {
     }
     return valid;
 }
+
+Face* Face::connect(Vertex *pVertex1, Vertex *pVertex2) {
+    assert( edgeCount() > 3);
+    Halfedge* he1 = nullptr;
+    Halfedge* he2 = nullptr;
+
+    for (auto i : circulate()){
+        if (i->vert == pVertex1){
+            he1 = i;
+        } else if (i->vert == pVertex2){
+            he2 = i;
+        }
+    }
+    assert(he1 && he2);
+    Halfedge* he1Next = he1->next;
+    Halfedge* he2Next = he2->next;
+
+    Halfedge* splitEdge1 = hMesh->createHalfedge();
+    Halfedge* splitEdge2 = hMesh->createHalfedge();
+    splitEdge1->glue(splitEdge2);
+    Face* newFace = hMesh->createFace();
+
+    // link vertices
+    splitEdge1->vert = pVertex1;
+    splitEdge2->vert = pVertex2;
+
+    // link edges
+    splitEdge1->link(he1Next);
+    he2->link(splitEdge1);
+    splitEdge2->link(he2Next);
+    he1->link(splitEdge2);
+
+
+    newFace->halfedge = splitEdge1;
+    newFace->reassignFaceToEdgeLoop();
+
+    this->halfedge = splitEdge2;
+    reassignFaceToEdgeLoop();
+
+    return newFace;
+}

@@ -20,18 +20,30 @@ public:
     Face* createFace();
     void clear();
 
-    const std::vector<Vertex*>  vertices();
+    const std::vector<Vertex*> vertices();
     const std::vector<Halfedge*> halfedges();
+    const std::vector<Halfedge*> halfedgesSingleSide();
     const std::vector<Face*>  faces();
 
-    void build(std::vector<glm::vec3> vertices, std::vector<int> indices);
+    // triangles
+    void build(const std::vector<glm::vec3>& vertices, const std::vector<int> & indices);
+    // polygons
+    void build(const  std::vector<glm::vec3>& vertices, const std::vector<std::vector<int> > & indices);
     void exportMesh(std::vector<glm::vec3> outVertices, std::vector<int> outIndices);
 
     void printDebug();
+
+    int faceCount();
+    int vertexCount();
+    int halfedgeCount();
+
+    Vertex* vertex(int id);
+    Halfedge* halfedge(int id);
+    Face* face(int id);
 private:
-    boost::container::stable_vector<Vertex> vertex;
-    boost::container::stable_vector<Halfedge> halfedge;
-    boost::container::stable_vector<Face> face;
+    boost::container::stable_vector<Vertex> mVertex;
+    boost::container::stable_vector<Halfedge> mHalfedge;
+    boost::container::stable_vector<Face> mFace;
     void destroy(Vertex* v);
     void destroy(Halfedge* he);
     void destroy(Face* v);

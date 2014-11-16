@@ -34,7 +34,11 @@ void HMeshComponent::update() {
             for (auto h : hmesh.halfedges()){
                 if (!h->isBoundary() && isSplit.find(h) == isSplit.end()){
                     isSplit.insert(h->opp);
-                    h->split();
+                    Vertex* thisVertex = h->next->vert;
+                    Vertex* oppVertex = h->opp->next->vert;
+                    Vertex* newVertex = h->split();
+                    h->face->connect(newVertex, thisVertex);
+                    h->opp->face->connect(newVertex, oppVertex);
                 }
             }
         } else if (KeyInput::down(Key::NUM_3) || KeyInput::down(Key::KP_3)) {
@@ -55,7 +59,7 @@ void HMeshComponent::update() {
         int postVert = hmesh.vertices().size();
         int postFaces = hmesh.faces().size();
         int postHalfedges = hmesh.halfedges().size();
-        printf("vert %i to %i faces %i to %i he %i to %i", nVert,postVert, nFaces, postFaces, nHalfedges, postHalfedges);
+        printf("vert %i to %i faces %i to %i he %i to %i\n", nVert,postVert, nFaces, postFaces, nHalfedges, postHalfedges);
         HMeshConverter::convert(&hmesh, meshData);
 
         mesh->setMeshData(meshData);

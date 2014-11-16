@@ -41,6 +41,7 @@ public:
     void glue(Halfedge* oppEdge);
 
     bool isValid();
+    float length();
 private:
 
 

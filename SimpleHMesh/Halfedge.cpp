@@ -52,45 +52,18 @@ void Halfedge::collapseInternal(bool opp){
 }
 
 Halfedge* Halfedge::splitInternal(Vertex* vertex){
-    if (face->edgeCount() != 3){
-        assert(false);// ("Can only Split edge between two triangles");
-    }
-    Halfedge* oldNext = next;
     Halfedge* oldPrev = prev;
 
-    Vertex* oppositeVert = next->vert;
-
     Halfedge* newPrev = hMesh->createHalfedge();
-    Halfedge* splitEdge1 = hMesh->createHalfedge();
-    Halfedge* splitEdge2 = hMesh->createHalfedge();
-    splitEdge1->glue(splitEdge2);
 
     // Link halfedges
     oldPrev->link(newPrev);
-    newPrev->link(splitEdge1);
-    splitEdge1->link(oldPrev);
-
-    oldNext->link(splitEdge2);
-    splitEdge2->link(this);
+    newPrev->link(this);
 
     // Link vertices
-    splitEdge1->link (oppositeVert);
-    splitEdge2->link (vertex);
     newPrev->link(vertex);
-    oldPrev->link(oldPrev->vert); // set correct vertex link
 
-    link(face);
-    face->reassignFaceToEdgeLoop();
-    Face* newFace = hMesh->createFace();
-    newPrev->link(newFace);
-    newFace->reassignFaceToEdgeLoop();
-
-    face->isValid();
-    newFace->isValid();
-    oppositeVert->isValid();
-    vertex->isValid();
-    splitEdge1->isValid();
-    splitEdge2->isValid();
+    newPrev->link(face);
 
     return newPrev;
 }
@@ -138,7 +111,6 @@ Vertex* Halfedge::split(){
         Halfedge* newOppHE = opp->splitInternal(vertex);
         newHE->glue(opp);
         this->glue(newOppHE);
-        newOppHE->isValid();
     }
     newHE->isValid();
     return vertex;
@@ -191,4 +163,10 @@ bool Halfedge::isValid() {
     }
 
     return valid;
+}
+
+float Halfedge::length() {
+    glm::vec3 vertexPos = vert->position;
+    glm::vec3 lastVertexPos = prev->vert->position;
+    return glm::length(vertexPos - lastVertexPos);
 }

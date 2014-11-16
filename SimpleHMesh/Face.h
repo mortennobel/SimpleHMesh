@@ -8,6 +8,7 @@
 
 #include <vector>
 #include <iostream>
+#include "Vertex.h"
 
 class Halfedge;
 class Vertex;
@@ -28,6 +29,9 @@ public:
     bool isValid();
 
     Halfedge* halfedge = nullptr;
+
+    Face* connect(Vertex *pVertex, Vertex *pVertex1);
+
 private:
     HMesh* hMesh;
 

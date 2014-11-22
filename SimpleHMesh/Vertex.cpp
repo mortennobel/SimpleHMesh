@@ -169,11 +169,11 @@ void Vertex::dissolve() {
 
     auto mMeshRef = hMesh;
 
-    hMesh->destroy(this);
     if (!boundary){
         hMesh->destroy(halfedge->opp);
     }
     hMesh->destroy(halfedge);
+    hMesh->destroy(this);
     assert(mMeshRef->isValid());
 
 }

@@ -40,6 +40,7 @@ public:
     Vertex* vertex(int id);
     Halfedge* halfedge(int id);
     Face* face(int id);
+    bool isValid();
 private:
     boost::container::stable_vector<Vertex> mVertex;
     boost::container::stable_vector<Halfedge> mHalfedge;

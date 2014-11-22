@@ -20,6 +20,9 @@ void HMeshComponent::update() {
         MeshData *meshData = mesh->meshData();
         HMeshConverter::convert(meshData, &hmesh);
 
+        cout << "pre"<<endl;
+        hmesh.printDebug();
+
         int nVert = hmesh.vertices().size();
         int nFaces = hmesh.faces().size();
         int nHalfedges = hmesh.halfedges().size();

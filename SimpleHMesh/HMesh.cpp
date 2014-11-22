@@ -48,14 +48,17 @@ Face *HMesh::createFace() {
 
 void HMesh::destroy(Vertex *v) {
     eraseElement<Vertex>(mVertex, v);
+    v->hMesh = nullptr;
 }
 
 void HMesh::destroy(Halfedge *he) {
     eraseElement<Halfedge>(mHalfedge, he);
+    he->hMesh = nullptr;
 }
 
 void HMesh::destroy(Face *f) {
     eraseElement<Face>(mFace, f);
+    f->hMesh = nullptr;
 }
 
 void HMesh::clear() {
@@ -119,6 +122,7 @@ void HMesh::build(const std::vector<glm::vec3>& vertices, const std::vector<int>
             keyValue.second->glue(iter->second);
         }
     }
+    isValid();
 }
 
 // polygons
@@ -164,6 +168,8 @@ void HMesh::build(const std::vector<glm::vec3>& vertices, const std::vector<std:
             keyValue.second->glue(iter->second);
         }
     }
+
+    isValid();
 }
 
 void HMesh::exportMesh(std::vector<glm::vec3> outVertices, std::vector<int> outIndices){
@@ -243,4 +249,21 @@ Halfedge *HMesh::halfedge(int id) {
 
 Face *HMesh::face(int id) {
     return &(mFace[id]);
+}
+
+bool HMesh::isValid() {
+    cout << "-------"<<endl;
+    printDebug();
+
+    bool valid = true;
+    for (auto& f : mFace){
+        valid &= f.isValid();
+    }
+    for (auto& f : mHalfedge){
+        valid &= f.isValid();
+    }
+    for (auto& f : mVertex){
+        valid &= f.isValid();
+    }
+    return valid;
 }

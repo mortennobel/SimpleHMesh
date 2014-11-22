@@ -45,6 +45,9 @@ public:
 #ifdef DEBUG
     int id;
 #endif
+
+    void dissolve();
+
 private:
 
 

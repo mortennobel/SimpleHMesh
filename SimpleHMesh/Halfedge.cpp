@@ -33,8 +33,9 @@ Vertex* Halfedge::collapse(bool center){
         opp->collapseInternal(true);
         hMesh->destroy(opp);
     }
-    hMesh->destroy(this);
 
+    hMesh->destroy(this);
+    assert(vert->halfedge->hMesh->isValid());
     return vert;
 }
 
@@ -54,7 +55,7 @@ void Halfedge::collapseInternal(bool opp){
     hMesh->destroy(face);
 }
 
-Halfedge* Halfedge::splitInternal(Vertex* vertex){
+Halfedge* Halfedge::splitInternal(Vertex* newVertex){
     Halfedge* oldPrev = prev;
 
     Halfedge* newPrev = hMesh->createHalfedge();
@@ -64,9 +65,11 @@ Halfedge* Halfedge::splitInternal(Vertex* vertex){
     newPrev->link(this);
 
     // Link vertices
-    newPrev->link(vertex);
+    newPrev->link(newVertex);
+    oldPrev->link(oldPrev->vert);
 
     newPrev->link(face);
+
 
     return newPrev;
 }
@@ -104,6 +107,7 @@ void Halfedge::flip() {
 
     face->reassignFaceToEdgeLoop();
     opp->face->reassignFaceToEdgeLoop();
+    assert(hMesh->isValid());
 }
 
 Vertex* Halfedge::split(){
@@ -112,10 +116,12 @@ Vertex* Halfedge::split(){
     Halfedge* newHE = splitInternal(vertex);
     if (opp != nullptr){
         Halfedge* newOppHE = opp->splitInternal(vertex);
+
         newHE->glue(opp);
         this->glue(newOppHE);
     }
-    newHE->isValid();
+    assert(hMesh->isValid());
+
     return vertex;
 }
 
@@ -183,4 +189,21 @@ std::ostream &operator<<(std::ostream& os, Halfedge *dt) {
             <<",opp:"<< (void*)dt->opp<<",vert:"<< (void*)dt->vert<<",face:"<< (void*)dt->face<<"}";
 #endif
     return os;
+}
+
+void Halfedge::dissolve() {
+    assert(this->opp);
+    prev->link(opp->next);
+    opp->prev->link(next);
+    hMesh->destroy(opp->face);
+    prev->link(face);
+    face->reassignFaceToEdgeLoop();
+    hMesh->destroy(opp);
+    hMesh->destroy(this);
+
+
+    prev->isValid();
+    face->isValid();
+    assert(prev->hMesh->isValid());
+
 }

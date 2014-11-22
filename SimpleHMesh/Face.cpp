@@ -103,6 +103,8 @@ Vertex *Face::split() {
 
     v->position = v->position * (1.0f/count);
 
+    assert(hMesh->isValid());
+
     return v;
 }
 
@@ -121,7 +123,7 @@ bool Face::isValid() {
     return valid;
 }
 
-Face* Face::connect(Vertex *pVertex1, Vertex *pVertex2) {
+Halfedge* Face::connect(Vertex *pVertex1, Vertex *pVertex2) {
     assert( edgeCount() > 3);
     Halfedge* he1 = nullptr;
     Halfedge* he2 = nullptr;
@@ -159,7 +161,24 @@ Face* Face::connect(Vertex *pVertex1, Vertex *pVertex2) {
     this->halfedge = splitEdge2;
     reassignFaceToEdgeLoop();
 
-    return newFace;
+    assert(hMesh->isValid());
+
+    return splitEdge1;
+}
+
+float Face::area(){
+    float  area=0.0f ;
+    // inspired by http://paulbourke.net/geometry/polygonmesh/source1.c
+    for (auto  he : circulate()){
+        auto lastHe = he->prev;
+        glm::vec3 hePos = he->vert->position;
+        glm::vec3 heLastPos = lastHe->vert->position;
+        area += hePos.x * heLastPos.y;
+        area -= hePos.y * heLastPos.x;
+    }
+
+    area /= 2;
+    return(area < 0 ? -area : area);
 }
 
 std::ostream &operator<<(std::ostream& os, Face *dt) {

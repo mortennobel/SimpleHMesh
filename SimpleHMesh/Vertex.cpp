@@ -140,3 +140,40 @@ std::ostream &operator<<(std::ostream& os, Vertex *dt) {
 #endif
     return os;
 }
+
+void Vertex::dissolve() {
+    assert(hMesh);
+    assert(circulate().size()<=2);
+    assert(halfedge);
+
+    bool boundary = isBoundary();
+
+    // link vertices
+    halfedge->prev->link(halfedge->vert);
+
+    // link halfedges
+    halfedge->prev->link(halfedge->next);
+    if (!boundary){
+        halfedge->opp->prev->link(halfedge->opp->next);
+    }
+
+    // link faces (make sure no dangling pointer);
+    halfedge->face->halfedge = halfedge->prev;
+    if (!boundary){
+        halfedge->opp->face->halfedge = halfedge->opp->prev;
+    }
+    halfedge->face->reassignFaceToEdgeLoop();
+    if (!boundary){
+        halfedge->opp->face->reassignFaceToEdgeLoop();
+    }
+
+    auto mMeshRef = hMesh;
+
+    hMesh->destroy(this);
+    if (!boundary){
+        hMesh->destroy(halfedge->opp);
+    }
+    hMesh->destroy(halfedge);
+    assert(mMeshRef->isValid());
+
+}

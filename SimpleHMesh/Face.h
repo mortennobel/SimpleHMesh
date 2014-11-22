@@ -28,9 +28,11 @@ public:
 
     bool isValid();
 
+    float area();
+
     Halfedge* halfedge = nullptr;
 
-    Face* connect(Vertex *pVertex, Vertex *pVertex1);
+    Halfedge* connect(Vertex *pVertex, Vertex *pVertex1);
 #ifdef DEBUG
     int id;
 #endif

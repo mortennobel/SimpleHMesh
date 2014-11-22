@@ -20,13 +20,13 @@ public:
     Face(const Face&) = delete;
     ~Face();
     int edgeCount();
-    std::vector<Halfedge*> circulate();
+    std::vector<Halfedge*> circulate() const;
 
     void reassignFaceToEdgeLoop();
 
     Vertex* split();
 
-    bool isValid();
+    bool isValid() const;
 
     float area();
 

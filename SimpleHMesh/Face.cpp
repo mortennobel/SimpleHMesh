@@ -35,7 +35,7 @@ int Face::edgeCount() {
     return count;
 }
 
-std::vector<Halfedge *> Face::circulate() {
+std::vector<Halfedge *> Face::circulate()  const {
     std::vector<Halfedge *> res;
     Halfedge *iter = halfedge;
     bool first = true;
@@ -104,7 +104,7 @@ Vertex *Face::split() {
     return v;
 }
 
-bool Face::isValid() {
+bool Face::isValid()  const{
     bool valid = true;
     if (halfedge == nullptr){
         cerr << "Halfedge is null"<<endl;
@@ -115,6 +115,9 @@ bool Face::isValid() {
             cerr << "Halfedge.face is not uniform along halfedges" << endl;
             valid = false;
         }
+    }
+    if (valid){
+        valid = hMesh->existsOrNull(this) && hMesh->existsOrNull(this->halfedge);
     }
     return valid;
 }

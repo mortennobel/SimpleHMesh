@@ -48,6 +48,12 @@ private:
     void destroy(Vertex* v);
     void destroy(Halfedge* he);
     void destroy(Face* v);
+    bool isUnused(const Vertex* v);
+    bool isUnused(const Halfedge* v);
+    bool isUnused(const Face* v);
+    bool existsOrNull(const Vertex *v);
+    bool existsOrNull(const Halfedge *v);
+    bool existsOrNull(const Face *v);
     friend class Vertex;
     friend class Halfedge;
     friend class Face;

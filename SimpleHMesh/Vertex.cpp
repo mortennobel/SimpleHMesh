@@ -99,7 +99,7 @@ std::vector<Halfedge*> Vertex::circulateOneRing(){
     return res;
 }
 
-bool Vertex::isValid(){
+bool Vertex::isValid() const{
     bool valid = true;
     if (halfedge == nullptr){
         assert(false);//"Halfedge is null");
@@ -109,6 +109,12 @@ bool Vertex::isValid(){
         assert(false);//"Vertex is not correctly associated with halfedge.";
         valid = false;
     }
+    if (valid){
+        valid = hMesh->existsOrNull(this) &&
+                hMesh->existsOrNull(this->halfedge)
+                ;
+    }
+
     return valid;
 }
 
@@ -148,26 +154,23 @@ void Vertex::dissolve() {
 
     bool boundary = isBoundary();
 
-    // link vertices
-    halfedge->prev->link(halfedge->vert);
-
     // link halfedges
     halfedge->prev->link(halfedge->next);
     if (!boundary){
         halfedge->opp->prev->link(halfedge->opp->next);
     }
 
+    // link vertices
+    halfedge->prev->link(halfedge->vert);
+
     // link faces (make sure no dangling pointer);
     halfedge->face->halfedge = halfedge->prev;
     if (!boundary){
         halfedge->opp->face->halfedge = halfedge->opp->prev;
     }
-    halfedge->face->reassignFaceToEdgeLoop();
-    if (!boundary){
-        halfedge->opp->face->reassignFaceToEdgeLoop();
-    }
 
-    auto mMeshRef = hMesh;
+    HMesh* mMeshRef = hMesh;
+
 
     if (!boundary){
         hMesh->destroy(halfedge->opp);

@@ -36,7 +36,7 @@ public:
     // dissolves a vertex. Note the vertex must only have two outgoing edges.
     void dissolve();
 
-    bool isValid();
+    bool isValid() const;
 #ifdef DEBUG
     int id;
 #endif

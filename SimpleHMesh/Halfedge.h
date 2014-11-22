@@ -40,7 +40,7 @@ public:
 
     void glue(Halfedge* oppEdge);
 
-    bool isValid();
+    bool isValid() const;
     float length();
 #ifdef DEBUG
     int id;
@@ -48,15 +48,18 @@ public:
 
     void dissolve();
 
+    bool isValidEdgeLoop();
 private:
 
 
     HMesh* hMesh;
 
     void collapseInternal(bool opp);
-    Halfedge* splitInternal(Vertex* vertex);
+
 
     friend class HMesh;
+
+    Halfedge *splitInternal(Vertex *vertex);
 };
 
 

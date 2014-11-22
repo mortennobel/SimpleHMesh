@@ -93,10 +93,6 @@ Vertex *Face::split() {
             reassignFaceToEdgeLoop();
         }
 
-        Halfedge *toNewVertex = hMesh->createHalfedge();
-        Halfedge *fromNewVertex = hMesh->createHalfedge();
-        toNewVertex->glue(fromNewVertex);
-
         first = false;
         count++;
     }

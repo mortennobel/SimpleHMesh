@@ -253,7 +253,9 @@ Face *HMesh::face(int id) {
 }
 
 bool HMesh::isValid() {
+
     bool valid = true;
+#ifdef DEBUG
     for (const auto& f : mFace){
         valid &= f.isValid();
         if (isUnused(&f)){
@@ -272,6 +274,7 @@ bool HMesh::isValid() {
             cout << "Vertex "<<f.id<<" unused"<<endl;
         }
     }
+#endif
     return valid;
 }
 
@@ -326,7 +329,9 @@ bool HMesh::existsOrNull(const Vertex *v) {
             return true;
         }
     }
+#ifdef DEBUG
     cout << "Error finding v "<<v->id<<endl;
+#endif
     return false;
 }
 
@@ -339,7 +344,9 @@ bool HMesh::existsOrNull(const Halfedge *h) {
             return true;
         }
     }
+#ifdef DEBUG
     cout << "Error finding he "<<h->id<<endl;
+#endif
     return false;
 }
 
@@ -352,6 +359,8 @@ bool HMesh::existsOrNull(const Face *f) {
             return true;
         }
     }
+#ifdef DEBUG
     cout << "Error finding face "<<f->id<<endl;
+#endif
     return false;
 }

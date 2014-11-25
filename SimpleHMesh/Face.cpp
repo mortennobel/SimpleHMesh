@@ -188,3 +188,61 @@ std::ostream &operator<<(std::ostream& os, Face *dt) {
 #endif
     return os;
 }
+
+Vertex *Face::split(Vertex *vertex) {
+    assert(edgeCount()>3); // only make sence with polygons of 4 or more edges
+    Halfedge* prevHe = nullptr;
+    for (auto he: circulate()){
+        if (he->vert == vertex){
+            prevHe = he;
+            break;
+        }
+    }
+    assert(prevHe);
+    if (!prevHe){
+        return nullptr;
+    }
+    Halfedge* prevPrevHe = prevHe->prev;
+    Halfedge* nextHe = prevHe->next;
+    Halfedge* nextNextHe = nextHe->next;
+    Vertex *fromVertex = prevPrevHe->vert;
+    Vertex *toVertex = nextHe->vert;
+
+    // new vertex
+    Vertex* newVertex = hMesh->createVertex();
+    Halfedge* newPrevHe1 = hMesh->createHalfedge();
+    Halfedge* newPrevHe2 = hMesh->createHalfedge();
+    Halfedge* newNextHe1 = hMesh->createHalfedge();
+    Halfedge* newNextHe2 = hMesh->createHalfedge();
+
+    Face* newFace = hMesh->createFace();
+
+    // link HEs
+    prevPrevHe->link(newPrevHe1);
+    newPrevHe1->link(newNextHe1);
+    newNextHe1->link(nextNextHe);
+
+    nextHe->link(newNextHe2);
+    newNextHe2->link(newPrevHe2);
+    newPrevHe2->link(prevHe);
+
+    newPrevHe1->glue(newPrevHe2);
+    newNextHe1->glue(newNextHe2);
+
+    // link vertices
+    newPrevHe1->link(newVertex);
+    newNextHe1->link(toVertex);
+    newNextHe2->link(newVertex);
+    newPrevHe2->link(fromVertex);
+
+    // link faces
+    newFace->halfedge = newPrevHe2;
+    newFace->reassignFaceToEdgeLoop();
+
+    halfedge =  newPrevHe1;
+    reassignFaceToEdgeLoop();
+
+    hMesh->isValid();
+
+    return newVertex;
+}

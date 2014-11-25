@@ -26,6 +26,9 @@ public:
 
     Vertex* split();
 
+    // split face around a single vertex (connecting edges to its neighbors)
+    Vertex* split(Vertex* vertex);
+
     bool isValid() const;
 
     float area();

@@ -42,6 +42,8 @@ public:
 
     bool isValid() const;
     float length();
+    // return direction of the edge (not normalized)
+    glm::vec3 direction();
 #ifdef DEBUG
     int id;
 #endif

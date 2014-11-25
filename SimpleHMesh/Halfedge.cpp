@@ -256,3 +256,7 @@ void Halfedge::dissolve() {
     assert(prev->hMesh->isValid());
 
 }
+
+glm::vec3 Halfedge::direction() {
+    return vert->position - prev->vert->position;
+}

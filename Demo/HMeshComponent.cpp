@@ -7,9 +7,9 @@
 #include "HMeshConverter.h"
 #include <iostream>
 #include <set>
-#include "Face.h";
-#include "Vertex.h";
-#include "Halfedge.h";
+#include "Face.h"
+#include "Vertex.h"
+#include "Halfedge.h"
 
 using namespace kick;
 using namespace std;
@@ -17,8 +17,8 @@ using namespace std;
 void HMeshComponent::update() {
     if (KeyInput::anyDown()){
         HMesh hmesh{};
-        MeshData *meshData = mesh->meshData();
-        HMeshConverter::convert(meshData, &hmesh);
+        auto meshData = mesh->meshData();
+        HMeshConverter::convert(meshData.get(), &hmesh);
 
         cout << "pre"<<endl;
         hmesh.printDebug();
@@ -63,7 +63,7 @@ void HMeshComponent::update() {
         int postFaces = hmesh.faces().size();
         int postHalfedges = hmesh.halfedges().size();
         printf("vert %i to %i faces %i to %i he %i to %i\n", nVert,postVert, nFaces, postFaces, nHalfedges, postHalfedges);
-        HMeshConverter::convert(&hmesh, meshData);
+        HMeshConverter::convert(&hmesh, meshData.get());
 
         mesh->setMeshData(meshData);
     }

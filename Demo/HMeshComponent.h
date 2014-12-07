@@ -9,14 +9,13 @@
 #include "kick/kick.h"
 
 class HMeshComponent : public kick::Component, public kick::Updatable {
-    kick::Mesh *mesh;
+    std::shared_ptr<kick::Mesh> mesh;
 public:
     HMeshComponent(kick::GameObject *gameObject) : Component(gameObject) {
         auto meshRenderer = gameObject->component<kick::MeshRenderer>();
         mesh = meshRenderer->mesh();
     }
-
-
+    kick::MeshData *meshData;
     virtual void update();
 };
 

@@ -22,7 +22,8 @@ int main(int argc, char * argv[])
     MeshRenderer *mr = scene->createPlane();
     cameraController->setTarget(mr->transform());
     mr->setMaterial( new Material(Project::loadShader("shaders/line.shader")));
-    mr->gameObject()->addComponent<HMeshComponent>();
+    auto mMeshComp = mr->gameObject()->addComponent<HMeshComponent>();
+
     scene->createDirectionalLight();
     Engine::startMainLoop();
 
